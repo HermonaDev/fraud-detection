@@ -34,7 +34,9 @@ def ip_to_int(ip) -> int:
         return -1
 
 
-def add_ip_integer(df: pd.DataFrame, ip_col: str = "ip_address") -> pd.DataFrame:
+def add_ip_integer(
+    df: pd.DataFrame, ip_col: str = "ip_address"
+) -> pd.DataFrame:
     """Add integer version of IP address column."""
     df = df.copy()
     df["ip_int"] = df[ip_col].apply(ip_to_int)
@@ -73,7 +75,10 @@ def merge_country_by_ip(
     merged["country"] = merged.apply(
         lambda row: (
             row["country"]
-            if (row["ip_int"] >= row["lower_int"] and row["ip_int"] <= row["upper_int"])
+            if (
+                row["ip_int"] >= row["lower_int"]
+                and row["ip_int"] <= row["upper_int"]
+            )
             else pd.NA
         ),
         axis=1,
