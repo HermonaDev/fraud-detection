@@ -37,4 +37,3 @@ def validate_data(df: pd.DataFrame, expected_columns: list) -> bool:
         logger.error(f"Missing columns: {missing}")
         return False
     return True
-
