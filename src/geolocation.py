@@ -17,12 +17,16 @@ def ip_to_int(ip) -> int:
         return int(ip)
     # If it's a string
     ip_str = str(ip)
-    if '.' in ip_str:
-        octets = ip_str.split('.')
+    if "." in ip_str:
+        octets = ip_str.split(".")
         if len(octets) != 4:
             raise ValueError(f"Invalid IPv4 address: {ip}")
-        return ((int(octets[0]) << 24) + (int(octets[1]) << 16) +
-                (int(octets[2]) << 8) + int(octets[3]))
+        return (
+            (int(octets[0]) << 24)
+            + (int(octets[1]) << 16)
+            + (int(octets[2]) << 8)
+            + int(octets[3])
+        )
     # String without dots (already integer representation)
     try:
         return int(float(ip_str))
@@ -38,8 +42,7 @@ def add_ip_integer(df: pd.DataFrame, ip_col: str = "ip_address") -> pd.DataFrame
 
 
 def merge_country_by_ip(
-    fraud_df: pd.DataFrame,
-    ip_country_df: pd.DataFrame
+    fraud_df: pd.DataFrame, ip_country_df: pd.DataFrame
 ) -> pd.DataFrame:
     """
     Merge fraud data with country using IP integer ranges.
@@ -63,21 +66,21 @@ def merge_country_by_ip(
         ip_country_df[["lower_int", "upper_int", "country"]],
         left_on="ip_int",
         right_on="lower_int",
-        direction="backward"
+        direction="backward",
     )
 
     # Mark country as NaN where IP not within range
     merged["country"] = merged.apply(
         lambda row: (
             row["country"]
-            if (row["ip_int"] >= row["lower_int"] and
-                row["ip_int"] <= row["upper_int"])
+            if (row["ip_int"] >= row["lower_int"] and row["ip_int"] <= row["upper_int"])
             else pd.NA
         ),
-        axis=1
+        axis=1,
     )
 
     # Drop helper columns
     merged = merged.drop(columns=["lower_int", "upper_int"])
 
     return merged
+

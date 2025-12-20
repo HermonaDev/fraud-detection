@@ -10,7 +10,7 @@ def load_fraud_data(data_path: Path) -> pd.DataFrame:
     df = pd.read_csv(
         data_path / "Fraud_Data.csv",
         parse_dates=["signup_time", "purchase_time"],
-        dtype={"ip_address": str}
+        dtype={"ip_address": str},
     )
     logger.info(f"Fraud data shape: {df.shape}")
     return df
@@ -37,3 +37,4 @@ def validate_data(df: pd.DataFrame, expected_columns: list) -> bool:
         logger.error(f"Missing columns: {missing}")
         return False
     return True
+
