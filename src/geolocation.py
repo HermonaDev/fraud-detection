@@ -83,4 +83,3 @@ def merge_country_by_ip(
     merged = merged.drop(columns=["lower_int", "upper_int"])
 
     return merged
-
