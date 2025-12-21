@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import logging
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
 
 logger = logging.getLogger(__name__)
 
@@ -67,3 +69,18 @@ def encode_categorical(df: pd.DataFrame, cat_cols: list) -> (pd.DataFrame, OneHo
     df = pd.concat([df.drop(columns=cat_cols), encoded_df], axis=1)
     logger.info(f"Encoded categorical columns: {cat_cols}")
     return df, encoder
+
+
+def resample_smote(X_train, y_train, random_state=42):
+    """Apply SMOTE to training data."""
+    sm = SMOTE(random_state=random_state)
+    X_res, y_res = sm.fit_resample(X_train, y_train)
+    logger.info(f"SMOTE applied: {len(y_train)} -> {len(y_res)} samples.")
+    return X_res, y_res
+
+def resample_undersample(X_train, y_train, random_state=42):
+    """Random undersample majority class."""
+    rus = RandomUnderSampler(random_state=random_state)
+    X_res, y_res = rus.fit_resample(X_train, y_train)
+    logger.info(f"Undersampling applied: {len(y_train)} -> {len(y_res)} samples.")
+    return X_res, y_res
