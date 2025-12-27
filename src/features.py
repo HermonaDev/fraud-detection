@@ -24,9 +24,11 @@ def add_time_features_fraud(df: pd.DataFrame) -> pd.DataFrame:
         )
     # Transaction velocity: number of purchases per user in last 24h window
     # This is simplified; for production you'd need a rolling window per user
-    df['transactions_last_24h'] = df.groupby('user_id')['purchase_time'].transform(
-        lambda x: x.rolling('24h', closed='left').count()
-    ).fillna(0)
+    df['transactions_last_24h'] = (
+        df.groupby('user_id')['purchase_time']
+        .transform(lambda x: x.rolling('24h', closed='left').count())
+        .fillna(0)
+    )
 
     logger.info("Added time features for fraud data.")
     return df
@@ -88,5 +90,9 @@ def resample_undersample(X_train, y_train, random_state=42):
     """Random undersample majority class."""
     rus = RandomUnderSampler(random_state=random_state)
     X_res, y_res = rus.fit_resample(X_train, y_train)
-    logger.info(f"Undersampling applied: {len(y_train)} -> {len(y_res)} samples.")
+    logger.info(
+        "Undersampling applied: %d -> %d samples.",
+        len(y_train),
+        len(y_res),
+    )
     return X_res, y_res

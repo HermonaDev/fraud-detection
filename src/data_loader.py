@@ -17,7 +17,10 @@ def clean_creditcard_data(df: pd.DataFrame) -> pd.DataFrame:
     # Remove duplicates
     initial = len(df)
     df = df.drop_duplicates()
-    logger.info(f"Removed {initial - len(df)} duplicate rows from creditcard data.")
+    logger.info(
+        "Removed %d duplicate rows from creditcard data.",
+        initial - len(df),
+    )
 
     # Ensure numeric (V1–V28, Amount, Time are already floats)
     # No missing values in this dataset per EDA
@@ -83,8 +86,12 @@ def clean_fraud_data(df: pd.DataFrame) -> pd.DataFrame:
 
     # Ensure datetime
     if 'signup_time' in df.columns and 'purchase_time' in df.columns:
-        df['signup_time'] = pd.to_datetime(df['signup_time'], errors='coerce')
-        df['purchase_time'] = pd.to_datetime(df['purchase_time'], errors='coerce')
+        df['signup_time'] = pd.to_datetime(
+            df['signup_time'], errors='coerce'
+        )
+        df['purchase_time'] = pd.to_datetime(
+            df['purchase_time'], errors='coerce'
+        )
 
     # Fill missing country (if column exists)
     if 'country' in df.columns:
