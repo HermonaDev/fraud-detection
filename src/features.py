@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import logging
 from imblearn.over_sampling import SMOTE
@@ -28,7 +27,7 @@ def add_time_features_fraud(df: pd.DataFrame) -> pd.DataFrame:
     df['transactions_last_24h'] = df.groupby('user_id')['purchase_time'].transform(
         lambda x: x.rolling('24h', closed='left').count()
     ).fillna(0)
-    
+
     logger.info("Added time features for fraud data.")
     return df
 
@@ -47,7 +46,10 @@ def add_time_features_creditcard(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def scale_numeric(df: pd.DataFrame, numeric_cols: list) -> (pd.DataFrame, StandardScaler):
+def scale_numeric(
+    df: pd.DataFrame,
+    numeric_cols: list
+) -> (pd.DataFrame, StandardScaler):
     """Scale numeric columns using StandardScaler."""
     df = df.copy()
     scaler = StandardScaler()
@@ -56,7 +58,10 @@ def scale_numeric(df: pd.DataFrame, numeric_cols: list) -> (pd.DataFrame, Standa
     return df, scaler
 
 
-def encode_categorical(df: pd.DataFrame, cat_cols: list) -> (pd.DataFrame, OneHotEncoder):
+def encode_categorical(
+    df: pd.DataFrame,
+    cat_cols: list
+) -> (pd.DataFrame, OneHotEncoder):
     """One-hot encode categorical columns."""
     df = df.copy()
     encoder = OneHotEncoder(sparse_output=False, drop='first')
@@ -77,6 +82,7 @@ def resample_smote(X_train, y_train, random_state=42):
     X_res, y_res = sm.fit_resample(X_train, y_train)
     logger.info(f"SMOTE applied: {len(y_train)} -> {len(y_res)} samples.")
     return X_res, y_res
+
 
 def resample_undersample(X_train, y_train, random_state=42):
     """Random undersample majority class."""
